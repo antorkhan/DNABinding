@@ -1,0 +1,19 @@
+Features count:
+
+nGrams :  8383
+nGDip  : 10000
+PSF    : 11296
+--------------
+Total  : 29679 
+
+nGrams --> AAC + dipeptide composition + tripeptide composition
+nGDip  --> Gapped dipeptides of gap between 1 to 20
+PSF    --> Position specific existance of amino acids, bigrams and trigrams. (E.g.  Does "ak" exist in positin 10?). For first 10 positions only.
+
+
+Files with featurized_ prefix are training set features. For test set, the prefix is testFeaturized_
+
+The suffix (before the .csv) represents which feature space was used
+
+"comb" means the combination of all the 3 feature spaces.
+
