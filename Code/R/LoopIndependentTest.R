@@ -2,6 +2,7 @@ library(e1071)
 library(ROCR)
 
 source('featurefiltering.R');
+source('learn.R');
 
 timestamp();
 
@@ -10,11 +11,12 @@ set.seed(10);
 fScheme = "_comb";
 featureCountList = seq(from=25, to=500, by=25);
 
+
 # File names #
 outFile     = "IndependentTestResults.csv";
 
 RDSFolder          = "RDSFiles/"
-rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE"            , fScheme, ".rds", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE2"            , fScheme, ".rds", sep = "");
 featureFile        = paste(RDSFolder, "featurized"    , fScheme, ".rds", sep = "");
 testFeatureFile    = paste(RDSFolder, "testFeaturized", fScheme, ".rds", sep = "");
 
