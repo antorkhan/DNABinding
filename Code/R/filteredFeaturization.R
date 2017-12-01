@@ -44,7 +44,7 @@ filteredFeaturization <-
           # update the n-mer feature count
           countToken = paste("C", 0, token, sep = "_")
           if (exists(countToken, envir = featureNameMap)) {
-            features[i,countToken] = features[i,countToken] + 1;
+            features[i,countToken] = features[i,countToken] + 1/(length(strSeq) - k + 1);
           }
           
           # update the posorder feature count
@@ -70,7 +70,7 @@ filteredFeaturization <-
             token = paste(strSeq[j], strSeq[j+1+k], sep = "");
             token = paste("G", k, token, sep = "_");
             if (exists(token, envir = featureNameMap)) {
-              features[i,token] = features[i,token] + 1;
+              features[i,token] = features[i,token] + 1/(length(strSeq) - k -1);
             }
           }
         }
