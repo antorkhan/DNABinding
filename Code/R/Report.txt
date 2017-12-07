@@ -19,6 +19,14 @@ The suffix (before the .csv) represents which feature space was used
 
 
 CDHIT (40%) on PDB186:
-95 sequences remain (only 5 are DNA binding)
+Only 95 sequences remain (only 5 are DNA binding) out of 186
+76 sequences are identical with some sequence in the training set
+> 40% --> 3
+> 50% --> 1
+> 60% --> 2
+> 70% --> 0
+> 80% --> 6
+> 90% --> 3
+
 
 
