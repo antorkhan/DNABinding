@@ -9,16 +9,17 @@ set.seed(10);
 
 #svmCostList = c(0.3, 1, 3, 10, 30, 100);
 svmCostList = c(1);
-featureCountList = seq(from=25, to=7000, by=25);
+#featureCountList = seq(from=25, to=7000, by=25);
+featureCountList = c(287);
 
 # 10 fold CV
 nFolds = 10
 
-fScheme = "_comb";
+fScheme = "_novel_comb";
 
 RDSFolder          = "RDSFiles/"
 
-rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE"  , fScheme, ".rds", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE2"  , fScheme, ".rds", sep = "");
 featureFile        = paste(RDSFolder, "featurized" , fScheme, ".rds", sep = "");
 outFile            = paste("out"        , fScheme, ".csv", sep = "");
 

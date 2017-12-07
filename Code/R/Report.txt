@@ -17,3 +17,8 @@ The suffix (before the .csv) represents which feature space was used
 
 "comb" means the combination of all the 3 feature spaces.
 
+
+CDHIT (40%) on PDB186:
+95 sequences remain (only 5 are DNA binding)
+
+

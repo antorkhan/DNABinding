@@ -8,9 +8,9 @@ timestamp();
 
 set.seed(10);
 
-fScheme = "_comb";
-featureCountList = seq(from=25, to=500, by=25);
-
+fScheme = "_novel_comb";
+#featureCountList = seq(from=25, to=500, by=25);
+featureCountList = c(287);
 
 # File names #
 outFile     = "IndependentTestResults.csv";
@@ -28,6 +28,13 @@ cat(as.character(Sys.time()),">> Reading training set features from", featureFil
 features = readRDS(featureFile);
 features$protection = as.numeric(features$protection) - 1;
 features = featurefiltering(features, rankedFeatures, max(featureCountList));
+
+#
+# Balance the dataset (434+434) by undersampling the negative (larger) set
+#
+negativeSetInd = sample(435:length(features[,1]))[1:434]
+negativeSetInd = negativeSetInd[order(negativeSetInd)]
+features = rbind(features[1:434,], features[negativeSetInd,])
 
 # random shuffle of features
 features <- features[sample(nrow(features)),]

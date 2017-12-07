@@ -1,6 +1,5 @@
 library(e1071)
-#source('./filteredFeaturization.R');
-source('./featurefiltering.R');
+source('./filteredFeaturization.R');
 
 # Customize parameters here. Predictions will be written to
 # predicted.csv file.
@@ -25,13 +24,8 @@ data = read.csv(sequenceFile);
 cat(as.character(Sys.time()),">> Done.\n");
 
 cat(as.character(Sys.time()),">> Generating features ...\n");
-#querySet = filteredFeaturization(data$Sequence, colnames(svmmodel$SV));
-querySet = readRDS("RDSFiles/testFeaturized_comb.rds");
-filter = readRDS("RDSFiles/ff_SvmRFE2_comb.rds");
-querySet = featurefiltering(querySet, filter, length(filter));
+querySet = filteredFeaturization(data$Sequence, colnames(svmmodel$SV));
 cat(as.character(Sys.time()),">> Done.\n");
-
-cat(as.character(Sys.time()),">> Predicting DNA binding proteins ...\n");
 svmpred = predict(svmmodel, querySet);
 
 predictions = data.frame(
