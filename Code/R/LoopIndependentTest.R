@@ -1,26 +1,27 @@
 library(e1071)
 library(ROCR)
 
-source('featurefiltering.R');
-source('learn.R');
+source('./featurefiltering.R');
+source('./homologyReduction.R');
+source('./learn.R');
 
 timestamp();
 
 set.seed(10);
 
-fScheme = "_comb";
+fScheme  = "_comb";
 hrScheme = "_BLASTCLUST25";
+bScheme  = "";
 
-featureCountList = seq(from=100, to=1500, by=100);
-#featureCountList = c(200);
+featureCountList = seq(from=10, to=600, by=10);
 
 # File names #
 outFile     = "IndependentTestResults.csv";
 
 RDSFolder          = "RDSFiles/"
-rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE"    , hrScheme, fScheme, ".rds", sep = "");
-featureFile        = paste(RDSFolder, "featurized"    ,           fScheme, ".rds", sep = "");
-testFeatureFile    = paste(RDSFolder, "testFeaturized",           fScheme, ".rds", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE2"    , hrScheme, bScheme, fScheme, ".rds", sep = "");
+featureFile        = paste(RDSFolder, "featurized"    ,                    fScheme, ".rds", sep = "");
+testFeatureFile    = paste(RDSFolder, "testFeaturized",                    fScheme, ".rds", sep = "");
 
 cat(as.character(Sys.time()),">> Reading feature ranking from", rankedFeaturesFile, "...\n");
 rankedFeatures = readRDS(rankedFeaturesFile);
@@ -34,9 +35,6 @@ cat(as.character(Sys.time()),">> Removing homology. hrScheme = ", hrScheme, "...
 features = homologyReduction(features, hrScheme);
 cat(as.character(Sys.time()),">> Done\n");
 
-# random shuffle of features
-features <- features[sample(nrow(features)),]
-
 cat(as.character(Sys.time()),">> Reading test set features from", testFeatureFile, "...\n");
 testSet = readRDS(testFeatureFile);
 cat(as.character(Sys.time()),">> Done\n");
@@ -45,12 +43,34 @@ bestPerf = NULL;
 bestParams = NULL;
 accData = NULL;
 
-cat(as.character(Sys.time()),">> Entering independet testing ...\n");
-
 # Reduce the feature vectors to the max size that we will be testing.
 # This way the filtering cost in the loop below will be reduced.
 features = featurefiltering(features, rankedFeatures, max(featureCountList));
 testSet  = featurefiltering(testSet, rankedFeatures, max(featureCountList));
+
+cat(as.character(Sys.time()),">> Balancing scheme is:", bScheme, "\n");
+if (bScheme != "") {
+  cat(as.character(Sys.time()),">> Balancing ...\n");
+  
+  #
+  # Balance the training set by undersampling the larger set
+  #
+  nPositive = length(which(features$protection == 1));
+  nNegative = length(features[,1]) - nPositive;
+  nBalanced = min(nPositive, nNegative);
+  
+  positiveSetInd = sample(1:nPositive)[1:nBalanced];
+  negativeSetInd = sample((nPositive+1):length(features[,1]))[1:nBalanced];
+  
+  features = rbind(features[positiveSetInd,], features[negativeSetInd,]);
+  
+  cat(as.character(Sys.time()),">> Done.\n");
+}
+
+# random shuffle of features
+features <- features[sample(nrow(features)),]
+
+cat(as.character(Sys.time()),">> Entering independet testing ...\n");
 
 # For regression study, we need to 'unfactor' the dependent var.
 # When converting from factor to numeric, Antigens becomes 2 and Non-antigens becomes 1.
