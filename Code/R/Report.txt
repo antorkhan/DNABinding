@@ -17,6 +17,18 @@ The suffix (before the .csv) represents which feature space was used
 
 "comb" means the combination of all the 3 feature spaces.
 
+BLASTCLUST25:
+------------
+
+Features with +ve score:
+
+nGrams :  3178
+nGDip  :  5345
+PSF    :  1118
+--------------
+Total  :  9641
+
+
 
 CDHIT (40%) on PDB186:
 Only 95 sequences remain (only 5 are DNA binding) out of 186

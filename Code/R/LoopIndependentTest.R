@@ -8,17 +8,19 @@ timestamp();
 
 set.seed(10);
 
-fScheme = "_novel_comb";
-#featureCountList = seq(from=25, to=500, by=25);
-featureCountList = c(287);
+fScheme = "_comb";
+hrScheme = "_BLASTCLUST25";
+
+featureCountList = seq(from=100, to=1500, by=100);
+#featureCountList = c(200);
 
 # File names #
 outFile     = "IndependentTestResults.csv";
 
 RDSFolder          = "RDSFiles/"
-rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE2"            , fScheme, ".rds", sep = "");
-featureFile        = paste(RDSFolder, "featurized"    , fScheme, ".rds", sep = "");
-testFeatureFile    = paste(RDSFolder, "testFeaturized", fScheme, ".rds", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE"    , hrScheme, fScheme, ".rds", sep = "");
+featureFile        = paste(RDSFolder, "featurized"    ,           fScheme, ".rds", sep = "");
+testFeatureFile    = paste(RDSFolder, "testFeaturized",           fScheme, ".rds", sep = "");
 
 cat(as.character(Sys.time()),">> Reading feature ranking from", rankedFeaturesFile, "...\n");
 rankedFeatures = readRDS(rankedFeaturesFile);
@@ -26,24 +28,17 @@ cat(as.character(Sys.time()),">> Done\n");
 
 cat(as.character(Sys.time()),">> Reading training set features from", featureFile, "...\n");
 features = readRDS(featureFile);
-features$protection = as.numeric(features$protection) - 1;
-features = featurefiltering(features, rankedFeatures, max(featureCountList));
+cat(as.character(Sys.time()),">> Done\n");
 
-#
-# Balance the dataset (434+434) by undersampling the negative (larger) set
-#
-negativeSetInd = sample(435:length(features[,1]))[1:434]
-negativeSetInd = negativeSetInd[order(negativeSetInd)]
-features = rbind(features[1:434,], features[negativeSetInd,])
+cat(as.character(Sys.time()),">> Removing homology. hrScheme = ", hrScheme, "...\n");
+features = homologyReduction(features, hrScheme);
+cat(as.character(Sys.time()),">> Done\n");
 
 # random shuffle of features
 features <- features[sample(nrow(features)),]
-cat(as.character(Sys.time()),">> Done\n");
 
 cat(as.character(Sys.time()),">> Reading test set features from", testFeatureFile, "...\n");
 testSet = readRDS(testFeatureFile);
-testSet$protection = as.numeric(testSet$protection) - 1;
-testSet = featurefiltering(testSet, rankedFeatures, max(featureCountList));
 cat(as.character(Sys.time()),">> Done\n");
 
 bestPerf = NULL;
@@ -51,6 +46,17 @@ bestParams = NULL;
 accData = NULL;
 
 cat(as.character(Sys.time()),">> Entering independet testing ...\n");
+
+# Reduce the feature vectors to the max size that we will be testing.
+# This way the filtering cost in the loop below will be reduced.
+features = featurefiltering(features, rankedFeatures, max(featureCountList));
+testSet  = featurefiltering(testSet, rankedFeatures, max(featureCountList));
+
+# For regression study, we need to 'unfactor' the dependent var.
+# When converting from factor to numeric, Antigens becomes 2 and Non-antigens becomes 1.
+# So we need to deduct 1.
+features$protection = as.numeric(features$protection) - 1;
+testSet$protection  = as.numeric(testSet$protection) - 1;
 
 for (maxFeatureCount in featureCountList) 
 {

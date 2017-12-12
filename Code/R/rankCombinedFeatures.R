@@ -1,16 +1,18 @@
 library(randomForest)
 
 source("featurefiltering.R")
+source("homologyReduction.R")
 
 timestamp();
 
 fScheme = "_comb";
+hrScheme = "_BLASTCLUST25";
 
-RDSFolder = "./"
+RDSFolder = "RDSFiles/"
 
-rfmodelFile        = paste(RDSFolder, "rfmodel"        , fScheme, ".rds", sep = "");
-rankedFeaturesFile = paste(RDSFolder, "ff"             , fScheme, ".rds", sep = "");
-featureFile        = paste(RDSFolder, "featurized"     , fScheme, ".rds", sep = "");
+rfmodelFile        = paste(RDSFolder, "rfmodel"        , hrScheme, fScheme, ".rds", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff"             , hrScheme, fScheme, ".rds", sep = "");
+featureFile        = paste(RDSFolder, "featurized"     ,           fScheme, ".rds", sep = "");
 
 fSubSchemes = c("_nGrams", "_nGDip", "_PSF");
 
@@ -22,7 +24,7 @@ if (!file.exists(rankedFeaturesFile)) {
     
     cat(as.character(Sys.time()),">> Heuristically combining feature space(s) ...\n");
     for (fSubScheme in fSubSchemes) {
-      curRFmodelFile = paste("rfmodel", fSubScheme, ".rds", sep = "");
+      curRFmodelFile = paste(RDSFolder, "rfmodel", hrScheme, fSubScheme, ".rds", sep = "");
       curRFModel = readRDS(curRFmodelFile);
       
       sortedImpScore = curRFModel$importance[order(-curRFModel$importance[,3]), 3];
@@ -36,6 +38,10 @@ if (!file.exists(rankedFeaturesFile)) {
     cat(as.character(Sys.time()),">> Loading feature file ...\n");
     features = readRDS(featureFile);
     cat(as.character(Sys.time()),">> Done. ( from cached file:", featureFile, ")\n");
+    
+    cat(as.character(Sys.time()),">> Removing homology. hrScheme = ", hrScheme, "...\n");
+    features = homologyReduction(features, hrScheme);
+    cat(as.character(Sys.time()),">> Done\n");
     
     # Reduce the feature vector to the heuristically combined feature space
     cat(as.character(Sys.time()),">> Keeping heuristically combined features ...\n");

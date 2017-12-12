@@ -1,23 +1,30 @@
 library(randomForest)
 
+source("./homologyReduction.R")
+
 timestamp();
 
 set.seed(10);
 
 fScheme = "_nGrams";
+hrScheme = "_BLASTCLUST25"
 
-fileNameSuffix = paste(fScheme, ".rds", sep = "");
+RDSFolder          = "RDSFiles/"
 
-rfmodelFile        = paste("rfmodel"   , fileNameSuffix, sep = "");
-rankedFeaturesFile = paste("ff"        , fileNameSuffix, sep = "");
-featureFile        = paste("featurized", fileNameSuffix, sep = "");
+rfmodelFile        = paste(RDSFolder, "rfmodel"   , hrScheme, fScheme, ".rds", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff"        , hrScheme, fScheme, ".rds", sep = "");
+featureFile        = paste(RDSFolder, "featurized",           fScheme, ".rds", sep = "");
 
 
 if (!file.exists(rankedFeaturesFile)) {
   cat(as.character(Sys.time()),">> Loading feature file ...\n");
   features = readRDS(featureFile);
   cat(as.character(Sys.time()),">> Done ( from cached file:", featureFile, ")\n");
- 
+  
+  cat(as.character(Sys.time()),">> Removing homology. hrScheme = ", hrScheme, "...\n");
+  features = homologyReduction(features, hrScheme);
+  cat(as.character(Sys.time()),">> Done\n");
+  
   features$ID = NULL;
   cat(as.character(Sys.time()),">> Total features: ", length(features[1,]) - 1, "\n");
   
