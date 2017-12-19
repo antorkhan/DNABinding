@@ -1,3 +1,16 @@
+Issues with training set
+------------------------
+Proteins with identical sequences
+
+2AY0A, 2AY0B, 2AY0C
+3FDQA, 3FDQB
+
+4GNXK, 4GNXL
+
+
+
+
+
 Features count:
 
 nGrams :  8383

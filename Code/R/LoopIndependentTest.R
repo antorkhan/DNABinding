@@ -13,7 +13,7 @@ fScheme  = "_comb";
 hrScheme = "_BLASTCLUST25";
 bScheme  = "";
 
-featureCountList = seq(from=10, to=600, by=10);
+featureCountList = seq(from=330, to=350, by=1);
 
 # File names #
 outFile     = "IndependentTestResults.csv";
