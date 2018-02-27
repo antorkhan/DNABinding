@@ -8,18 +8,19 @@ library("ggplot2")
 library("XLConnect")
 library("reshape2")
 
-###### Accuracy/MCC vs. choice of nFeatures  ############
+###### Accuracy/MCC etc. vs. choice of nFeatures  ############
 
 # Use the appropriate data file here:
 xlsFile  = "PerfSearch_comb.xlsx"
-xlsSheet = "TenfoldCV_Coarse"
+xlsSheet = "TenfoldCV_SVM_Micro"
 
 workBook = loadWorkbook(xlsFile)
 data = readWorksheet(workBook, xlsSheet);
 
-data = data[, c("nF", "Accuracy", "MCC")]
+data = data[, c("nF", "AUCROC", "Accuracy", "Sensitivity", "Specificity", "MCC")]
+colnames(data)[2] = "auROC"
 
-df <- melt(data,  id.vars = "nF", variable.name = "Metric");
+df <- melt(data,  id.vars = "nF", variable.name = 'Metric');
 
 nFeatureTuning = ggplot(df,aes(x=nF,y=value)) +
   theme_bw(base_size = 36, base_family = "") +
@@ -27,8 +28,8 @@ nFeatureTuning = ggplot(df,aes(x=nF,y=value)) +
   theme(legend.title = element_blank()) +
   theme(legend.position = "top") +
   geom_line(aes(colour=Metric),size =3) +
-  labs(y = "Performance Score x 100");
+  labs(x = "Number of Features", y = "Performance Score x 100");
   
-postscript(file = "TenfoldCV_Coarse.eps", paper = "letter");
+postscript(file = paste0(xlsSheet, ".eps"), paper = "letter");
 nFeatureTuning;
 dev.off();
