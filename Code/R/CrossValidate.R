@@ -10,20 +10,21 @@ set.seed(10);
 
 #svmCostList = c(0.3, 1, 3, 10, 30, 100);
 svmCostList = c(1);
-featureCountList = seq(from=500, to=6500, by=500);
+#featureCountList = seq(from=500, to=6500, by=500);
+featureCountList = c(100);
 
 # 10 fold CV
 nFolds = 10
 
-fScheme = "_comb";
-hrScheme = "_CDHIT40";
-bScheme  = "_RUS";
+fScheme  = "_comb";
+hrScheme = "";
+bScheme  = "";
 
 RDSFolder          = "RDSFiles/"
 
-rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE" , hrScheme, bScheme, fScheme, ".rds", sep = "");
-featureFile        = paste(RDSFolder, "featurized"                   , fScheme, ".rds", sep = "");
-outFile            = paste("out"                  , hrScheme, bScheme, fScheme, ".csv", sep = "");
+rankedFeaturesFile = paste(RDSFolder, "ff_SvmRFE2" , hrScheme, bScheme, fScheme, ".rds", sep = "");
+featureFile        = paste(RDSFolder, "featurized"                    , fScheme, ".rds", sep = "");
+outFile            = paste("out"                   , hrScheme,  bScheme, fScheme, ".csv", sep = "");
 
 cat(as.character(Sys.time()),">> Reading training set features from", featureFile, "...\n");
 features = readRDS(featureFile);
@@ -36,6 +37,8 @@ cat(as.character(Sys.time()),">> Done\n");
 cat(as.character(Sys.time()),">> Reading feature ranking from", rankedFeaturesFile, "...\n");
 rankedFeatures = readRDS(rankedFeaturesFile);
 cat(as.character(Sys.time()),">> Done\n");
+
+rankedFeatures = rankedNew;
 
 # jackknife
 if (nFolds < 0) {

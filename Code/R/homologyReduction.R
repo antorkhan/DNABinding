@@ -1,7 +1,7 @@
 homologyReduction <-
   function(features, hrScheme) {
     result = NULL;
-    if (is.null(hrScheme) && hrScheme == "") {
+    if (is.null(hrScheme) || hrScheme == "") {
       result = features;
     } else {
       homologyRemovedFile = paste("trainingSet" , hrScheme, ".csv", sep = "");
