@@ -18,7 +18,7 @@ PSF   = 0;
 # Uncomment when considering all features
 maxFeatures = length(rankedt[,1]);
 
-#maxFeatures = 3000
+maxFeatures = 9936
 for(i in 1:maxFeatures){
   if(gregexpr(pattern = "C_", cname[i])[[1]][1]>0){
     nGram = nGram + rankedt[i,impindex]
@@ -35,17 +35,18 @@ cat("PSF ="   , PSF,"\n")
 
 # Data for different feature types
 data = data.frame(`Category` = character(), CumImp = numeric());
-data = rbind(data, data.frame(`Category` = "PSF"    , CumImp = PSF));
+data = rbind(data, data.frame(`Category` = "PSN"    , CumImp = PSF));
 data = rbind(data, data.frame(`Category` = "n-grams", CumImp = nGram));
 data = rbind(data, data.frame(`Category` = "nGDip"  , CumImp = nGDip));
 
 cumFeatureImp = ggplot(data,aes(x=`Category`, y = CumImp)) + 
-  theme_bw(base_size = 36, base_family = "") +
+  theme_bw(base_size = 40, base_family = "") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position="none") +
   theme(aspect.ratio = 0.6) +
   geom_bar(aes(fill = Category),stat = "identity", position = "dodge", width = 0.5) +
-  labs(x = "Feature Extraction Technique", y = "Cumulative Importance");
+  labs(x = "Feature Extraction Technique", y = "Cumulative Importance") +
+  ylim(0,0.15);
   
 postscript(file = paste0("cumFeatureImp", maxFeatures, ".eps"), paper = "letter");
 cumFeatureImp;
