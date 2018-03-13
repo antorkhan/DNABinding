@@ -43,7 +43,7 @@ data = rbind(data, c(0.55, 0.09, 1.00, 0.21));
 data = rbind(data, c(0.65, 0.82, 0.48, 0.32));
 data = rbind(data, c(0.79, 0.76, 0.81, 0.57));
 data = rbind(data, c(0.87, 0.83, 0.91, 0.74));
-rownames(data) = c("PSF", "n-grams", "nGDip", "COMB");
+rownames(data) = c("PSN", "n-grams", "nGDip", "COMB");
 colnames(data) = c("Accuracy", "Sensitivity", "Specificity", "MCC");
 
 # Data for different feature types each using 100 features
@@ -53,7 +53,7 @@ data = rbind(data, c(0.62, 0.28, 0.95, 0.32));
 data = rbind(data, c(0.74, 0.80, 0.68, 0.49));
 data = rbind(data, c(0.84, 0.84, 0.83, 0.68));
 data = rbind(data, c(0.87, 0.83, 0.91, 0.74));
-rownames(data) = c("PSF", "n-grams", "nGDip", "COMB");
+rownames(data) = c("PSN", "n-grams", "nGDip", "COMB");
 colnames(data) = c("Accuracy", "Sensitivity", "Specificity", "MCC");
 
 # Data for subset combinations of top 100 features
