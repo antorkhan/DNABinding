@@ -1,2 +1,2 @@
 # DNABinding
-DNA binding protein prediction work (improvement attempt over iDNAProt-ES
+DNA binding protein prediction work. (DPP-PseAAC)
